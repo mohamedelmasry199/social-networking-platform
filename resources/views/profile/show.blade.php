@@ -29,7 +29,6 @@
                 <div class="col-xs-12 col-sm-4 text-center">
                     <figure>
                         <img src="{{ asset('storage/'.$user->profile_picture) }}" alt="" class="img-circle img-responsive">
-
                     </figure>
                 </div>
             </div>
