@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,11 +12,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -25,46 +20,41 @@ class User extends Authenticatable
         'bio',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
-    public function friendships()
-    {
-        return $this->hasMany(Friendship::class, 'user_id', 'id');
-    }
-
-    public function friends()
-    {
-        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
-            ->withPivot('status')
-            ->wherePivot('status', 'accepted'); // Only accepted friendships
-    }
-
-    public function sentFriendRequests()
-    {
-        return $this->hasMany(Friendship::class, 'user_id', 'id')->where('status', 'pending');
-    }
 
     public function receivedFriendRequests()
     {
-        return $this->hasMany(Friendship::class, 'friend_id', 'id')->where('status', 'pending');
+        return $this->hasMany(Friendship::class, 'second_user')->where('status', 'pending');
     }
+
+    // for confirmed friendships
+    public function friendships()
+    {
+        return $this->hasMany(Friendship::class, 'first_user')->where('status', 'confirmed');
+    }
+
+    // accessor for friends
+    public function getFriendsAttribute()
+    {
+        return $this->friendships()->pluck('second_user');
+    }
+
+    // // accessor for blocked friends
+    // public function getBlockedFriendsAttribute()
+    // {
+    //     return $this->hasMany(Friendship::class, 'first_user')
+    //                 ->where('status', 'blocked')
+    //                 ->where('acted_user', $this->id)
+    //                 ->pluck('second_user');
+    // }
+
 
     public function posts()
     {
@@ -80,5 +70,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Like::class);
     }
-
 }

@@ -35,11 +35,13 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'profile_picture'=>['image','max:1048576','dimensions:min_width=100,min_height=100'],
+
         ]);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'bio'=>$request->bio,
             'profile_picture'=>$this->uploadImage($request),
         ]);
 

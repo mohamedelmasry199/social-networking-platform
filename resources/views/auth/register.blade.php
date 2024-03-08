@@ -38,6 +38,12 @@
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
+        <div>
+            <x-input-label for="bio" :value="__('Bio')" />
+            <textarea id="bio" class="block mt-1 w-full" name="bio" required autocomplete="bio">{{ old('bio') }}</textarea>
+            <x-input-error :messages="$errors->get('bio')" class="mt-2" />
+        </div>
+
 
         <div>
             <x-input-label for="profile_picture" :value="__('Profile_Picture')" />
