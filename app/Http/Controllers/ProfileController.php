@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Friendship;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +19,8 @@ class ProfileController extends Controller
      */
     public function show($id){
         $user = User::findOrFail($id);
-        return view('profile.show',compact('user'));
+        $friendsNumber = Friendship::where('first_user', $id)->count();
+        return view('profile.show',compact('user','friendsNumber'));
     }
     public function edit(Request $request): View
     {

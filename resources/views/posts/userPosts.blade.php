@@ -1,4 +1,5 @@
-<link href="{{asset('styles/posts.css')}}" rel="stylesheet">
+<x-app-layout>
+    <link href="{{asset('styles/posts.css')}}" rel="stylesheet">
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -40,30 +41,13 @@
                         <div class="h7">{{ auth()->user()->bio }}
                         </div>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <a href="{{ route('friends.display',['userId'=>auth()->user()->id]) }}">
-                        <li class="list-group-item">
-                            <div class="h6 text-muted">Friends</div>
-                            <div class="h5">{{ $friendsNumber }}</div>
-                        </li>
-                        <a href="{{ route('friend_requests.index') }}">
-                            <li class="list-group-item">
-                                <div class="h6 text-muted">requests</div>
-                                <div class="h5">{{ $requestsNumber }}</div>
-                            </li>
-                        </a>
-
-                    </ul>
-                    <a href="{{ route('post.create') }}">
-                        <li class="list-group-item">
-                            <div class="h6 text-muted">Create Post</div>
-                        </li>
-                    </a>
 
                 </div>
             </div>
             <div class="col-md-6 gedf-main">
 
+
+                <!-- Post /////-->
                 @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -108,7 +92,7 @@
                                         <form action="{{ route('post.delete', ['id' => $post->id]) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-link text-danger">Delete</button>
+                                            <button type="submit" class="dropdown-item">Delete</button>
                                         </form>
                                     @endif
 
@@ -136,66 +120,7 @@
                         </a>
                         <p class="card-text">{{ $post->content }}</p>
                     </div>
-                    <!-- Card footer -->
-                    <div class="card-footer">
-                        <div class="card-footer">
-                            <a href="#" class="card-link likeButton" data-post-id="{{ $post->id }}"><i class="fa fa-gittip"></i> Like</a>
-                        </div>
-                        <a href="{{ route('post.likes', $post) }}" class="btn btn-link card-link" id="toggleComments"><i class="fa fa-comment"></i> Likes</a>
-                             <a href="{{ route('comments.index', $post) }}" class="btn btn-link card-link" id="toggleComments"><i class="fa fa-comment"></i> Comments</a>
-                        <form action="{{ route('comments.store', $post) }}" method="post" class="comment-form row">
-                            @csrf
-                            <div class="form-group col">
-                                <textarea name="content" class="form-control" rows="3" placeholder="Write your comment here"></textarea>
-                            </div>
-                            <div class="form-group col-auto mt-2"> <!-- Adjust the top margin here -->
-                                <button type="submit" class="btn btn-primary">Add Comment</button>
-                            </div>
-                        </form>
-                    </div>
-
 
                 </div>
-
-
-                @endforeach
-
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script>
-                    $(document).ready(function(){
-                        $('[data-post-id]').each(function(){
-                            var post_id = $(this).data("post-id");
-                            var liked = localStorage.getItem('liked_' + post_id);
-                            if(liked){
-                                $(this).addClass('liked').css("color", "red").text("Liked by you");
-                            } else {
-                                $(this).css("color", "blue").text("Like");
-                            }
-                        });
-
-                        $(".likeButton").click(function(e){
-                            e.preventDefault();
-                            var post_id = $(this).data("post-id");
-                            var url = "{{ route('like.store') }}";
-                            var button = $(this);
-
-                            var isLiked = button.hasClass('liked');
-
-                            $.ajax({
-                                type: "POST",
-                                url: url,
-                                data: { post_id: post_id, _token: '{{ csrf_token() }}' },
-                                success: function(response){
-                                    console.log(response);
-                                    if (isLiked) {
-                                        button.removeClass('liked').css("color", "blue").text("Like");
-                                        localStorage.removeItem('liked_' + post_id);
-                                    } else {
-                                        button.addClass('liked').css("color", "red").text("Liked by you");
-                                        localStorage.setItem('liked_' + post_id, true);
-                                    }
-                                }
-                            });
-                        });
-                    });
-                </script>
+            @endforeach
+        </x-app-layout>

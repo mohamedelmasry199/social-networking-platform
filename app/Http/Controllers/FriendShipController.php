@@ -94,6 +94,6 @@ public function acceptFriendRequest($friendshipId)
 
      return redirect()->back()->with('success', 'Friend request sent successfully');
  }
-
+//done
 
 }
