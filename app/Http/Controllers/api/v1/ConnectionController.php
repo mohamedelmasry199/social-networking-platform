@@ -1,36 +1,36 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api\v1;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Friendship;
 use App\Models\User;
-use Illuminate\Http\Request;
 
-class FriendShipController extends Controller
+class ConnectionController extends Controller
 {
-    public function displayRequests()
+    public function index()
     {
         $user = auth()->user();
-
         if (!$user) {
-            return redirect()->route('login')->with('error', 'Authentication failed.');
+            return response()->json(['error' => 'Authentication failed.'], 401);
         }
 
         $friendRequests = $user->receivedFriendRequests;
 
-        return view('friendShip.friendRequests', compact('friendRequests'));
+        return response()->json(['friendRequests' => $friendRequests], 200);
     }
 
-    public function displayFriends($userId)
+    public function show($userId)
     {
         $friends = Friendship::with('user')->where('second_user', $userId)
-        ->where('status', 'confirmed')
-        ->get();
+            ->where('status', 'confirmed')
+            ->get();
 
-        return view('friendShip.friends', compact('friends'));
+        return response()->json(['friends' => $friends], 200);
     }
 
-    public function acceptFriendRequest($friendshipId)
+    public function acceptRequest($friendshipId)
     {
         $friendship = Friendship::findOrFail($friendshipId);
         $friendship->status = 'confirmed';
@@ -43,31 +43,29 @@ class FriendShipController extends Controller
             'status' => 'confirmed',
         ]);
 
-        return redirect()->back()->with('success', 'Friend request accepted successfully');
+        return response()->json(['message' => 'Friend request accepted successfully'], 200);
     }
 
-    public function deleteFriendRequest($friendshipId)
+    public function destroy($friendshipId)
     {
         $friendship = Friendship::findOrFail($friendshipId);
         $friendship->delete();
 
-        return redirect()->back()->with('success', 'Friend request deleted successfully');
+        return response()->json(['message' => 'Friend request deleted successfully'], 200);
     }
 
-    public function sendRequest(Request $request)
+    public function store(Request $request,$friendId)
     {
         $user = auth()->user();
-        $friendId = $request->input('friend_id');
 
         if (!$user) {
-            return redirect()->route('login')->with('error', 'Authentication failed.');
+            return response()->json(['error' => 'Authentication failed.'], 401);
         }
 
         if ($user->id == $friendId) {
-            return redirect()->back()->with('error', 'You cannot send a friend request to yourself.');
+            return response()->json(['error' => 'You cannot send a friend request to yourself.'], 422);
         }
 
-        // Check if the friendship already exists (sent or received)
         $existingFriendship = Friendship::where(function ($query) use ($user, $friendId) {
             $query->where('first_user', $user->id)->where('second_user', $friendId);
         })->orWhere(function ($query) use ($user, $friendId) {
@@ -76,18 +74,17 @@ class FriendShipController extends Controller
 
         if ($existingFriendship) {
             if ($existingFriendship->status === 'pending') {
-                return redirect()->back()->with('error', 'Friend request already sent or received.');
+                return response()->json(['error' => 'Friend request already sent or received.'], 422);
             }
-            return redirect()->back()->with('success', 'You are already friends.');
+            return response()->json(['message' => 'You are already friends.'], 200);
         }
 
-        // Create a new friendship
         $friendship = new Friendship();
         $friendship->first_user = $user->id;
         $friendship->second_user = $friendId;
         $friendship->status = 'pending';
         $friendship->save();
 
-        return redirect()->back()->with('success', 'Friend request sent successfully');
+        return response()->json(['message' => 'Friend request sent successfully'], 201);
     }
 }
