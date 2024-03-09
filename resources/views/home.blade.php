@@ -122,11 +122,12 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- Card body -->
                     <div class="card-body">
                         <!-- Post image -->
-                        @if ($post->image!='null')
-    <img src="{{ asset('storage/'.$post->image) }}" class="img-fluid" style="width: 650px; height: 650px;" alt="Post Image">
+                        @if ($post->image)
+    <img src="{{ asset('storage/'.$post->image) }}" class="img-fluid" style="width: 700px; height: 650px;" alt="Post Image">
 @endif
 
 

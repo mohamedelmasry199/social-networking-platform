@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="container mt-4">
+    {{-- <div class="container mt-4">
         <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="card">
@@ -36,5 +36,62 @@
                 </div>
             </div>
         </form>
+    </div> --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        .create-post {
+            margin-top: 3%;
+            padding: 3%;
+            background-color: #f8f9fa;
+        }
+
+        .create-post-heading {
+            text-align: center;
+            margin-top: 8%;
+            margin-bottom: 3%;
+            color: #495057;
+        }
+
+        .create-post-form {
+            padding: 2%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 create-post">
+            <h3 class="create-post-heading">Create Post</h3>
+            <form class="create-post-form" action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group">
+                    <label for="postTitle">Title</label>
+                    <input type="text" class="form-control" id="postTitle" name="title" placeholder="Enter post title">
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Content</label>
+                    <textarea class="form-control" id="postContent" name="content" rows="5" placeholder="Enter post content"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="postImage">Image</label>
+                    <input type="file" class="form-control-file" id="postImage" name="image">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Post</button>
+            </form>
+        </div>
     </div>
+</div>
+
+</body>
+</html>
+
 </x-app-layout>

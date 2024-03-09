@@ -55,6 +55,6 @@ class Handler extends ExceptionHandler
             return 401;
         }
 
-        return 400; // Default status code for unhandled exceptions
+        return 400;
     }
 }
