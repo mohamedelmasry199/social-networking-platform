@@ -28,9 +28,12 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 text-center">
                             <figure>
-                                <img src="{{ asset('storage/'.$user->profile_picture) }}" alt="" class="img-circle img-responsive">
+                                <a href="{{ asset('storage/'.$user->profile_picture) }}" target="_blank">
+                                    <img src="{{ asset('storage/'.$user->profile_picture) }}" alt="" class="img-circle img-responsive">
+                                </a>
                             </figure>
                         </div>
+
                     </div>
                     <div class="col-xs-12 divider text-center">
                         @if($user->id !== auth()->user()->id)
