@@ -12,9 +12,12 @@
         </div>
         @foreach ($friends as $request)
         <li class="list-group-item text-left">
-            <img class="img-thumbnail" src="{{ asset('storage/'.$request->user->profile_picture ) }}">
+            <a href="{{ route('profile.show', ['id' => $request->user->id]) }}">
+
+            <img class="img-thumbnail" src="{{ asset('storage/'.$request->user->profile_picture ) }}"> </a>
             <label class="name">
-                {{ $request->user->name }}<br>
+                <a href="{{ route('profile.show', ['id' => $request->user->id]) }}"> {{ $request->user->name }}</a>
+               <br>
             </label>
 
         </li>

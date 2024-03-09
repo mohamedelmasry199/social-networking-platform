@@ -43,6 +43,7 @@
                                     <button type="submit" class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Add Friend</button>
                                 </form>
                             </div>
+
                         @else
                         <h2><strong>Your Profile</strong></h2>
 

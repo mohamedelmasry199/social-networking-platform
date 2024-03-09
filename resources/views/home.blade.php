@@ -34,9 +34,12 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="card">
-                    <div class="card-body">
-                        <div class="h5">{{ auth()->user()->email }}</div>
-                        <div class="h7 text-muted">{{ auth()->user()->name }}</div>
+                    <div class="card-body" >
+
+                        <a href="{{ route('profile.show', ['id' => auth()->user()->id]) }}">{{ auth()->user()->email }}</a>
+                        <div class="h7 text-muted">
+                            <a href="{{ route('profile.show', ['id' => auth()->user()->id]) }}">{{ auth()->user()->name }}</a>
+                        </div>
                         <div class="h7">{{ auth()->user()->bio }}
                         </div>
                     </div>

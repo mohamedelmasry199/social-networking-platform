@@ -1,5 +1,5 @@
 <x-app-layout>
 
-@include('posts.posts')
+@include('home')
 
 </x-app-layout>
