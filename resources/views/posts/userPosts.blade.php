@@ -46,7 +46,6 @@
             </div>
             <div class="col-md-6 gedf-main">
 
-
                 <!-- Post /////-->
                 @if (session('success'))
                 <div class="alert alert-success">

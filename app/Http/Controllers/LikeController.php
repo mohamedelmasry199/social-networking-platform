@@ -25,6 +25,7 @@ class LikeController extends Controller
         ]);
         return redirect()->route('home')->with('success', 'Like added successfully');
 
+
     }
 
     }

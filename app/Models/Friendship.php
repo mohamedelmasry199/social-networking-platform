@@ -12,7 +12,6 @@ class Friendship extends Model
     protected $fillable = [
         'first_user',
         'second_user',
-        'acted_user',
         'status',
     ];
 
@@ -21,29 +20,15 @@ class Friendship extends Model
         return $this->belongsTo(User::class, 'first_user');
     }
 
-    public function friend_requests()
-    {
-        return $this->hasMany(Friendship::class, 'second_user')->where('status', 'pending');
-    }
-
-    public function friendships()
-    {
-        return $this->hasMany(Friendship::class, 'first_user')->where('status', 'confirmed');
-    }
-
     public function getFriendsAttribute()
     {
-        return $this->friendships()->pluck('second_user');
+        return $this->where('status', 'confirmed')
+                    ->where(function ($query) {
+                        $query->where('first_user', $this->first_user)
+                              ->orWhere('second_user', $this->first_user);
+                    })
+                    ->pluck('first_user', 'second_user');
     }
-
-    // // accessor for blocked friends
-    // public function getBlockedFriendsAttribute()
-    // {
-    //     return $this->hasMany(Friendship::class, 'first_user')
-    //                 ->where('status', 'blocked')
-    //                 ->where('acted_user', $this->id)
-    //                 ->pluck('second_user');
-    // }
 
     protected static function boot()
     {
@@ -57,4 +42,3 @@ class Friendship extends Model
         });
     }
 }
-//done

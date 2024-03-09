@@ -34,7 +34,6 @@ class User extends Authenticatable
         return $this->hasMany(Friendship::class, 'second_user')->where('status', 'pending');
     }
 
-    // for confirmed friendships
     public function friendships()
     {
         return $this->hasMany(Friendship::class, 'first_user')->where('status', 'confirmed');
@@ -45,17 +44,6 @@ class User extends Authenticatable
     {
         return $this->friendships()->pluck('second_user');
     }
-
-    // // accessor for blocked friends
-    // public function getBlockedFriendsAttribute()
-    // {
-    //     return $this->hasMany(Friendship::class, 'first_user')
-    //                 ->where('status', 'blocked')
-    //                 ->where('acted_user', $this->id)
-    //                 ->pluck('second_user');
-    // }
-
-
     public function posts()
     {
         return $this->hasMany(Post::class);
